@@ -27,7 +27,7 @@ Resources:
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Description: API POLLER EXAMPLE
-  
+
 Resources:
 
   # ROLES
@@ -40,7 +40,7 @@ Resources:
           - Effect: "Allow"
             Principal:
               Service: "events.amazonaws.com"
-            Action: 
+            Action:
               - "sts:AssumeRole"
       Policies:
         - PolicyName: DirectlyInvokeStepFunctions
@@ -60,7 +60,7 @@ Resources:
         Version: "2012-10-17"
         Statement:
         - Effect: "Allow"
-          Principal: 
+          Principal:
             Service: "apigateway.amazonaws.com"
           Action:
           - "sts:AssumeRole"
@@ -91,7 +91,7 @@ Resources:
         Version: "2012-10-17"
         Statement:
         - Effect: "Allow"
-          Principal: 
+          Principal:
             Service: "apigateway.amazonaws.com"
           Action:
           - "sts:AssumeRole"
@@ -110,7 +110,7 @@ Resources:
 
   PollerEventBus:
     Type: AWS::Events::EventBus
-    Properties: 
+    Properties:
       Name: PollerEventBus
 
   PollerEventBusDefaultRule:
@@ -125,8 +125,8 @@ Resources:
         detail-type:
           - "api.event"
       Targets:
-        - 
-          Arn: !GetAtt PollerStateMachine.Arn 
+        -
+          Arn: !GetAtt PollerStateMachine.Arn
           Id: "PollerStateMachineTarget"
           RoleArn: !GetAtt PollerEventBusRole.Arn
 
@@ -172,7 +172,7 @@ Resources:
   RawPayloadBucket:
     Type: AWS::S3::Bucket
     DeletionPolicy: Delete
-    Properties: 
+    Properties:
       AccessControl: Private
 
   # POLLER QUEUES
@@ -254,10 +254,10 @@ Resources:
 
   PollerStateMachineLogGroup:
     Type: AWS::Logs::LogGroup
-    Properties: 
+    Properties:
       LogGroupName: !Sub "PollerStateMachineLogGroup-${AWS::StackName}"
       RetentionInDays: 7
-              
+
   # PAYLOAD PROCESSOR STATE MACHINE
 
   PollerStateMachine:
@@ -303,7 +303,7 @@ Resources:
         WorkflowFetchPayloadFunction: !GetAtt WorkflowFetchPayloadFunction.Arn
         SQSPutItem: !Sub arn:${AWS::Partition}:states:::sqs:sendMessage
         ProcessPayloadQueueUrl: !Ref ProcessPayloadQueue
-        PollerTasksTable: !Ref PollerTasksTable 
+        PollerTasksTable: !Ref PollerTasksTable
         DDBPutItem: !Sub arn:${AWS::Partition}:states:::dynamodb:putItem
 
   # PAYLOAD PROCESSOR STATE MACHINE LAMBDAS
